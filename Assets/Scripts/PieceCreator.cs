@@ -9,13 +9,16 @@ public class PieceCreator : MonoBehaviour
     string ranks;
     void Start()
     {
+    }
+
+    private void Awake()
+    {
         pieces = Resources.LoadAll<Sprite>("pieces");
         files = "abcdefgh";
         ranks = "12345678";
-        clear();
     }
 
-    void add(bool white, int type, int file, int rank)
+    public void add(bool white, int type, int file, int rank)
     {
         //0 = pawn, 1 = knight, 2 = bishop, 3 = rook, 4 = king, 5 = queen
         int ind = 0;
@@ -52,7 +55,7 @@ public class PieceCreator : MonoBehaviour
         SpriteRenderer rend = gameObject.transform.Find(sqName).GetChild(0).GetComponent<SpriteRenderer>();
         rend.sprite = pieces[ind];
     }
-    void clear()
+    public void clear()
     {
         Transform board = gameObject.transform;
         for (int file = 0; file < 8; file++)
