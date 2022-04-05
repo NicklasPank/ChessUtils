@@ -4,9 +4,20 @@ using UnityEngine;
 
 public class MainController : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public GameObject board;
+
+    BitBoards bitboards;
+
     void Start()
     {
-        BitBoardHelper bbHelp = new BitBoardHelper();
+        FenDecoder fd = board.GetComponent<FenDecoder>();
+        int[] starting = fd.decode(fd.startingFen);
+        fd.translate(starting);
+        bitboards.setBitBoards(starting);
+
+    }
+    private void Awake()
+    {
+        bitboards = new BitBoards();
     }
 }

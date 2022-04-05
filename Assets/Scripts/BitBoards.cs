@@ -15,7 +15,7 @@ public class BitBoards
     public BitBoards()
     {
         bbHelper = new BitBoardHelper();
-        occupied = new ulong[3];
+        occupied = new ulong[2];
         pieces = new ulong[6];
         attacks = new ulong[64];
         attacked = new ulong[64];
@@ -24,13 +24,31 @@ public class BitBoards
 
     public void createAttacks(ulong occ)
     {
-        for (int i = 0; i < pieces.Length; i++)
+        for (int type = 0; type < pieces.Length; type++)
         {
-            ulong pieceboard = pieces[i] & occ;
-
+            ulong pieceboard = pieces[type] & occ;
+            List<int> positions = bbHelper.positionsIn(pieceboard);
+            foreach (int pos in positions)
+            {
+                createAttacksSingular(pos, type);
+            }
         }
     }
-    private ulong generateAttacks(int pos, int pieceType)
+
+    //@param board.Length = 64
+    public void setBitBoards(int[] board)
+    {
+        for (int i = 0; i < board.Length; i++)
+        {
+            if (board[i] == -1) { continue; }
+            int type = board[i];
+            int white = type < 8 ? 0 : 1;
+            occupied[white] += bbHelper.identities[i];
+            type &= 7;
+            pieces[type] += bbHelper.identities[i];
+        }
+    }
+    private ulong createAttacksSingular(int pos, int pieceType)
     {
         //010 011 110 111
         //000 001 100 101
