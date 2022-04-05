@@ -5,17 +5,17 @@ using UnityEngine;
 public class FenDecoder : MonoBehaviour
 {
     PieceCreator pc;
-    string startingFen;
+    public string startingFen;
     void Start()
     {
-        translate(decode(startingFen));
+        
     }
     private void Awake()
     {
         pc = gameObject.GetComponent<PieceCreator>();
         startingFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
     }
-    void translate(int[] decoded)
+    public void translate(int[] decoded)
     {
         pc.clear();
 
@@ -29,7 +29,7 @@ public class FenDecoder : MonoBehaviour
             pc.add(isWhite, type, file, rank);
         }
     }
-    int[] decode(string fen)
+    public int[] decode(string fen)
     {
         int[] decoded = new int[64];
         string wpieces = "PNBRKQ";

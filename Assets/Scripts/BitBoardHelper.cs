@@ -18,8 +18,13 @@ public class BitBoardHelper
     public ulong[,] pawnAttacks;
     public ulong[] kingAttacks;
 
+    public ulong[] identities;
+    private Dictionary<ulong, int> idpos;
+
     public BitBoardHelper()
     {
+        fillIdentities();
+        fillIdPos();
         fillBitscans();
         fillKnightAttacks();
         fillPawnAttacks();
@@ -97,9 +102,19 @@ public class BitBoardHelper
                             bitScanReverse(blocker | 1);
         return attacks ^ rays[pos, dir8];
     }
-    public int[] positionsIn(ulong bb)
+    public List<int> positionsIn(ulong bb)
     {
-        return null;
+        List<int> pos = new List<int>();
+        ulong lsb = bb & (0 - bb);
+        bb ^= lsb;
+        while (lsb != 0)
+        {
+            pos.Add(idpos[lsb]);
+            lsb = bb & (0 - bb);
+            bb ^= lsb;
+        }
+
+        return pos;
     }
     private int bitScanForward(ulong bb)
     {
@@ -132,7 +147,7 @@ public class BitBoardHelper
                     && Mathf.Abs((spot1 % 8) - curFile) <= 1
                     && Mathf.Abs((spot1 / 8) - curRank) <= 1)
                 {
-                    ray1 += (ulong)Mathf.Pow(2, spot1);
+                    ray1 += identities[spot1];
                     curFile = spot1 % 8;
                     curRank = spot1 / 8;
                     spot1 += dir[i];
@@ -185,7 +200,7 @@ public class BitBoardHelper
                 if (tempFile >= 0 && tempFile < 8
                     && tempRank >= 0 && tempRank < 8)
                 {
-                    atts += (ulong)Mathf.Pow(2, pos + moves[dir]);
+                    atts += identities[pos + moves[dir]];
                 }
             }
             knightAttacks[pos] = atts;
@@ -236,39 +251,55 @@ public class BitBoardHelper
             int rank = pos / 8;
             if (file != 0)
             {
-                att += (ulong)(Mathf.Pow(2, pos - 1));
+                att += identities[pos - 1];
                 if (rank != 0)
                 {
-                    att += (ulong)(Mathf.Pow(2, pos - 9));
+                    att += identities[pos - 9];
                 }
                 if (rank != 7)
                 {
-                    att += (ulong)(Mathf.Pow(2, pos + 7));
+                    att += identities[pos + 7];
                 }
             }
             if (file != 7)
             {
-                att += (ulong)(Mathf.Pow(2, pos + 1));
+                att += identities[pos + 1];
                 if (rank != 0)
                 {
-                    att += (ulong)(Mathf.Pow(2, pos - 7));
+                    att += identities[pos - 7];
                 }
                 if (rank != 7)
                 {
-                    att += (ulong)(Mathf.Pow(2, pos + 9));
+                    att += identities[pos + 9];
                 }
             }
             if (rank != 0)
             {
-                att += (ulong)(Mathf.Pow(2, pos - 8));
+                att += identities[pos - 8];
             }
             if (rank != 7)
             {
-                att += (ulong)(Mathf.Pow(2, pos + 8));
+                att += identities[pos + 8];
             }
 
             kingAttacks[pos] = att;
         }
     }
-
+    private void fillIdentities()
+    {
+        identities = new ulong[64];
+        for (int i = 0; i < identities.Length; i++)
+        {
+            identities[i] = (ulong)(Mathf.Pow(2, i));
+        }
+    }
+    private void fillIdPos()
+    {
+        idpos = new Dictionary<ulong, int>();
+        for (int i = 0; i < identities.Length; i++)
+        {
+            idpos.Add(identities[i], i);
+        }
+        idpos.Add(0, -1);
+    }
 }
