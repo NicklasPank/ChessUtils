@@ -9,8 +9,8 @@ public class Highlighter : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //tint(20, Color.yellow);
-        //tint(19, Color.yellow);
+        highlight(20, Color.yellow);
+        highlight(19, Color.yellow);
     }
     private void Awake()
     {
@@ -18,15 +18,10 @@ public class Highlighter : MonoBehaviour
         ColorUtility.TryParseHtmlString("#9C501A", out dark);
     }
 
-    public void tint(int pos, Color hl)
+    public void highlight(int pos, Color hl)
     {
         SpriteRenderer rend = organizer.getSquare(pos).GetComponent<SpriteRenderer>();
-        Color prev = rend.color;
-        //float avg = (prev.r + prev.g + prev.b) / 3;
-        Color tint = new Color(hl.r * prev.r, hl.g * prev.g, hl.b * prev.b, prev.a);
-        rend.color = hl;
-        Debug.Log(prev.r);
-        Debug.Log(prev.g);
-        Debug.Log(prev.b);
+        float tint = ((pos%8 + pos/8) % 2) == 1 ? 1 : 0.95f;
+        rend.color = hl * tint;
     }
 }
