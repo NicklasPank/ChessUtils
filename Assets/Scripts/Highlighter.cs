@@ -9,8 +9,8 @@ public class Highlighter : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        highlight(20, Color.yellow);
-        highlight(19, Color.yellow);
+        //highlight(20, Color.yellow);
+        //highlight(19, Color.yellow);
     }
     private void Awake()
     {

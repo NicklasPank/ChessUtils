@@ -48,7 +48,6 @@ public class PieceCreator : MonoBehaviour
                 break;
 
         }
-
         
         string sqName = files[file] + "" + ranks[rank];
 

@@ -23,4 +23,8 @@ public class Organizer : MonoBehaviour
     {
         return squares[pos];
     }
+    public SpriteRenderer getPiece(int pos)
+    {
+        return squares[pos].transform.Find("Piece").GetComponent<SpriteRenderer>();
+    }
 }
